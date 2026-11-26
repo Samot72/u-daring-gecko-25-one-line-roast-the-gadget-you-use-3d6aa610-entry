@@ -26,6 +26,18 @@ if (ENTRY.trim().length === 0) {
 if (/[\r\n]/.test(ENTRY)) {
   throw new Error("entry must be a single line");
 }
+if (/\s{2,}/.test(ENTRY)) {
+  throw new Error("entry must not contain double spaces");
+}
+if (ENTRY !== ENTRY.trim()) {
+  throw new Error("entry must not start or end with whitespace");
+}
+for (const ch of ENTRY) {
+  const code = ch.codePointAt(0);
+  if (code < 0x20 || code === 0x7f) {
+    throw new Error("entry must not contain control characters");
+  }
+}
 
 // --- write byte-exact, WITHOUT a trailing newline --------------------------
 const outDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
